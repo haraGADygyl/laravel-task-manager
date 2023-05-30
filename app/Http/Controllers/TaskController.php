@@ -38,7 +38,7 @@ class TaskController extends Controller
 
         Task::create($validatedData);
 
-        return redirect('/tasks');
+        return redirect()->route('tasks.index')->with('success', "Task '$request->title' created successfully!");
     }
 
     /**
@@ -46,7 +46,9 @@ class TaskController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $task = Task::find($id);
+
+        return view('tasks.show', compact('task'));
     }
 
     /**
@@ -54,7 +56,9 @@ class TaskController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $task = Task::find($id);
+
+        return view('tasks.edit', compact('task'));
     }
 
     /**
@@ -62,10 +66,16 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        $data = $request->only(['title', 'description', 'due_date', 'status']);
-        $task->update($data);
+        $validatedData = $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'due_date' => 'required|date',
+            'status' => 'required'
+        ]);
 
-        return redirect('tasks,index');
+        $task->update($validatedData);
+
+        return redirect()->route('tasks.index')->with('success', "Task '$task->title' updated successfully.");
     }
 
     /**
@@ -73,6 +83,10 @@ class TaskController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $task = Task::find($id);
+
+        $task->delete();
+
+        return redirect()->route('tasks.index')->with('success', "Task '$task->title' deleted successfully!");
     }
 }
