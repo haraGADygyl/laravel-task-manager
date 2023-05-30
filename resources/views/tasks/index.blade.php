@@ -23,6 +23,35 @@
         </div>
     @endif
 
+    <!-- Filter form -->
+    <div>
+        <form action="{{ route('tasks.index') }}" method="GET" class="p-2 mt-2 mx-auto max-w-md text-center">
+            <label for="status" class="block text-gray-700 font-semibold p-2">Filter by Status</label>
+            <select name="status" id="status" class="w-64 border-gray-300 rounded-md p-2">
+                <option value="">All</option>
+                <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Completed</option>
+                <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Not Completed</option>
+            </select>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mt-2">
+                Apply Filter
+            </button>
+        </form>
+    </div>
+
+    <div>
+        <form action="{{ route('tasks.index') }}" method="GET" class="p-2 mt-2 mx-auto max-w-md text-center">
+            <label for="sort" class="block text-gray-700 font-semibold p-2">Sort by Due Date:</label>
+            <select name="sort" id="sort" class="w-64 border-gray-300 rounded-md p-2">
+                <option value="">None</option>
+                <option value="asc" {{ Request::query('sort') == 'asc' ? 'selected' : '' }}>Ascending</option>
+                <option value="desc" {{ Request::query('sort') == 'desc' ? 'selected' : '' }}>Descending</option>
+            </select>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mt-2">
+                Sort
+            </button>
+        </form>
+    </div>
+
     <div class="mt-4">
         @foreach($tasks as $task)
             <div class="py-2">

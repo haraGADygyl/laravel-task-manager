@@ -10,9 +10,23 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::orderBy('due_date')->get();
+        $statusFilter = $request->query('status');
+        $sortBy = $request->query('sort');
+
+        $tasks = Task::when($statusFilter !== null, function ($query) use ($statusFilter) {
+            return $query->where('status', $statusFilter);
+        })
+            ->when($sortBy !== null, function ($query) use ($sortBy) {
+                if ($sortBy === 'asc') {
+                    return $query->orderBy('due_date', 'asc');
+                } elseif ($sortBy === 'desc') {
+                    return $query->orderBy('due_date', 'desc');
+                }
+            })
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
         return view('tasks.index', compact('tasks'));
     }
