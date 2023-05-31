@@ -47,7 +47,12 @@ class TaskController extends Controller
         $validatedData = $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'due_date' => 'required|date|after_or_equal:today',
+            'due_date' => 'required|date',
+        ], [
+            'title.required' => 'Please enter a title.',
+            'description.required' => 'Please enter a description.',
+            'due_date.required' => 'Please enter a due date.',
+            'due_date.date' => 'Please enter a valid date.',
         ]);
 
         Task::create($validatedData);
@@ -85,6 +90,12 @@ class TaskController extends Controller
             'description' => 'required',
             'due_date' => 'required|date',
             'status' => 'required'
+        ], [
+            'title.required' => 'Please enter a title.',
+            'description.required' => 'Please enter a description.',
+            'due_date.required' => 'Please enter a due date.',
+            'due_date.date' => 'Please enter a valid date.',
+            'status.required' => 'Please choose a status.'
         ]);
 
         $task->update($validatedData);
