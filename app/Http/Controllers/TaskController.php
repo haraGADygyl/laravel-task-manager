@@ -15,9 +15,10 @@ class TaskController extends Controller
         $statusFilter = $request->query('status');
         $sortBy = $request->query('sort');
 
-        $tasks = Task::when($statusFilter !== null, function ($query) use ($statusFilter) {
-            return $query->where('status', $statusFilter);
-        })
+        $tasks = Task::where('user_id', auth()->id())
+            ->when($statusFilter !== null, function ($query) use ($statusFilter) {
+                return $query->where('status', $statusFilter);
+            })
             ->when($sortBy !== null, function ($query) use ($sortBy) {
                 if ($sortBy === 'asc') {
                     return $query->orderBy('due_date', 'asc');
@@ -30,6 +31,7 @@ class TaskController extends Controller
 
         return view('tasks.index', compact('tasks'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -48,12 +50,9 @@ class TaskController extends Controller
             'title' => 'required',
             'description' => 'required',
             'due_date' => 'required|date',
-        ], [
-            'title.required' => 'Please enter a title.',
-            'description.required' => 'Please enter a description.',
-            'due_date.required' => 'Please enter a due date.',
-            'due_date.date' => 'Please enter a valid date.',
         ]);
+
+        $validatedData['user_id'] = auth()->id();
 
         Task::create($validatedData);
 
@@ -73,9 +72,11 @@ class TaskController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Task $task)
     {
-        $task = Task::find($id);
+        if ($task->user_id !== auth()->id()) {
+            abort(403);
+        }
 
         return view('tasks.edit', compact('task'));
     }
@@ -106,9 +107,11 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Task $task)
     {
-        $task = Task::find($id);
+        if ($task->user_id !== auth()->id()) {
+            abort(403);
+        }
 
         $task->delete();
 
