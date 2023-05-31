@@ -46,3 +46,8 @@ This is a task management system built with Laravel 10 and PHP 8, allowing users
 
 You have successfully set up and run the Task Management System locally. Now you can manage your tasks efficiently and stay organized. Enjoy!
 
+## Screenshots
+
+![Screenshot](screenshots/1.png)
+![Screenshot](screenshots/2.png)
+![Screenshot](screenshots/3.png)
