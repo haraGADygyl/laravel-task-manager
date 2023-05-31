@@ -19,7 +19,7 @@
                         {{ __('My Tasks') }}
                     </x-nav-link>
                     <x-nav-link :href="route('tasks.create')" :active="request()->routeIs('tasks.create')">
-                        {{ __('Add Task') }}
+                        {{ __('Create Task') }}
                     </x-nav-link>
                 </div>
             </div>
